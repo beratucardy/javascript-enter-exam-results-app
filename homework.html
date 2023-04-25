@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Bootstrap demo</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.1/css/all.min.css"
+      integrity="sha512-MV7K8+y+gLIBoVD59lQIYicR65iaqukzvf/nwasF0nqhPay5w/9lJmVM2hMDcnK1OnMGCdVK+iQrJ7lzPJQd1w=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style>
+      .form-control:focus {
+        border-color: #212529;
+        box-shadow: none;
+      }
+      .form-control {
+        color: #212529;
+        border: 1px solid #212529;
+      }
+      table tbody tr:last-child td:first-child {
+        text-align: right;
+      }
+      .tableAll {
+        display: flex;
+        justify-content: center;
+      }
+      .table {
+        width: 31.2rem;
+      }
+      @media (max-width: 575px) {
+        .table {
+          width: 10rem;
+        }
+        .newInputs {
+          padding: 0;
+          width: 50px;
+        }
+      }
+      div.tableAll table tbody tr td:nth-child(4) {
+        text-align: center;
+      }
+      .btn {
+        --bs-btn-border-width: 0;
+      }
+      .btn:active {
+        opacity: 0.5;
+      }
+      tr th:nth-child(1) {
+        width: 1px;
+      }
+      tr th:nth-child(2) {
+        width: 190px;
+      }
+      tr th:nth-child(3) {
+        width: 199px;
+      }
+      tr th:nth-child(4) {
+        width: 100px;
+      }
+      .red {
+        background-color: red !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="row g-3 align-items-center justify-content-center flex-sm-row flex-column mt-1"
+    >
+      <div class="col-auto">
+        <input
+          type="text"
+          id="txtName"
+          class="form-control"
+          placeholder="Type name..."
+        />
+      </div>
+      <div class="col-auto">
+        <input
+          type="number"
+          id="txtPoint"
+          class="form-control"
+          placeholder="Point"
+        />
+      </div>
+      <div class="col-auto">
+        <button type="button" class="btn btn-warning text-white" id="btnAdd">
+          + Add
+        </button>
+      </div>
+    </div>
+    <div class="tableAll">
+      <table class="table table-striped table-bordered mt-1">
+        <thead class="table-dark">
+          <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Point</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody class="body">
+          <tr>
+            <td scope="row" colspan="2">Average</td>
+            <td class="point"></td>
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <script>
+      const name = document.querySelector("#txtName");
+      const point = document.querySelector("#txtPoint");
+      const add = document.querySelector("#btnAdd");
+      const tbody = document.querySelector(".body");
+      const putPoint = document.querySelector(".point");
+      add.addEventListener("click", () => {
+        const newTr = document.createElement("tr");
+        const newTdNumber = document.createElement("td");
+        newTdNumber.setAttribute("scope", "row");
+        const newTdName = document.createElement("td");
+        const newTdPoint = document.createElement("td");
+        const newTdIcons = document.createElement("td");
+        newTdIcons.classList.add("d-flex");
+        newTdIcons.classList.add("justify-content-center");
+        const btnDel = document.createElement("button");
+        const btnEdit = document.createElement("button");
+        const btnAccept = document.createElement("button");
+        const btnCancel = document.createElement("button");
+        btnAccept.classList.add("btn");
+        btnAccept.classList.add("d-none");
+        btnCancel.classList.add("btn");
+        btnCancel.classList.add("d-none");
+        btnDel.classList.add("btn");
+        btnEdit.classList.add("btn");
+        if (
+          !isNaN(name.value) ||
+          !name.value ||
+          name.value == "null" ||
+          name.value == "undefined" ||
+          isNaN(point.value) ||
+          !point.value ||
+          point.value == "null" ||
+          point.value == "undefined" ||
+          point.value > 100 ||
+          point.value < 0
+        )
+          return alert("Please enter a valid name or point!");
+        newTdName.innerText = name.value;
+        newTdPoint.innerText = point.value;
+        btnAccept.innerHTML = `<i class="fa-solid fa-check"></i>`;
+        btnCancel.innerHTML = `<i class="fa-solid fa-xmark"></i>`;
+        btnDel.innerHTML = `<i class="fa-solid fa-trash-can"></i>`;
+        btnEdit.innerHTML = `<i class="fa-solid fa-pencil"></i>`;
+        newTdIcons.prepend(btnEdit, btnDel);
+        newTdIcons.prepend(btnAccept, btnCancel);
+        newTr.prepend(newTdNumber, newTdName, newTdPoint, newTdIcons);
+        tbody.prepend(newTr);
+        btnEdit.addEventListener("click", (e) => {
+          index();
+          let name_val;
+          let point_val;
+          let name_data;
+          let point_data;
+          btnEdit.classList.add("d-none");
+          btnDel.classList.add("d-none");
+          btnAccept.classList.remove("d-none");
+          btnCancel.classList.remove("d-none");
+          if (e.path.length == 11) {
+            e.path[3].childNodes[1].focus();
+            name_data = e.path[3].childNodes[1].innerHTML;
+            point_data = e.path[3].childNodes[2].innerHTML;
+            e.path[3].childNodes[1].innerHTML = `<input type="text" id="name_text" value="${name_data}" class="newInputs">`;
+            e.path[3].childNodes[2].innerHTML = `<input type="number" id="point_text" value="${point_data}" class="newInputs">`;
+          }
+          if (e.path.length == 10) {
+            name_data = e.path[2].childNodes[1].innerHTML;
+            point_data = e.path[2].childNodes[2].innerHTML;
+            e.path[2].childNodes[1].innerHTML = `<input type="text" id="name_text" value="${name_data}" class="newInputs">`;
+            e.path[2].childNodes[2].innerHTML = `<input type="number" id="point_text" value="${point_data}" class="newInputs">`;
+          }
+          btnAccept.addEventListener("click", (e) => {
+            name_val = document.getElementById("name_text").value;
+            point_val = document.getElementById("point_text").value;
+            if (
+              !isNaN(name_val) ||
+              !name_val ||
+              name_val == "null" ||
+              name_val == "undefined" ||
+              isNaN(point_val) ||
+              !point_val ||
+              point_val == "null" ||
+              point_val == "undefined" ||
+              point_val > 100 ||
+              point_val < 0
+            ) {
+              return alert("Please enter a valid name or point!");
+            }
+            if (e.path.length == 11) {
+              e.path[3].childNodes[1].innerHTML = name_val;
+              e.path[3].childNodes[2].innerHTML = point_val;
+            } else if (e.path.length == 10) {
+              e.path[2].childNodes[1].innerHTML = name_val;
+              e.path[2].childNodes[2].innerHTML = point_val;
+            }
+            calculateAverage();
+            reset();
+            index();
+            btnEdit.classList.remove("d-none");
+            btnDel.classList.remove("d-none");
+            btnAccept.classList.add("d-none");
+            btnCancel.classList.add("d-none");
+          });
+          btnCancel.addEventListener("click", (e) => {
+            if (e.path.length == 11) {
+              e.path[3].childNodes[1].innerHTML = name_data;
+              e.path[3].childNodes[2].innerHTML = point_data;
+            } else if (e.path.length == 10) {
+              e.path[2].childNodes[1].innerHTML = name_data;
+              e.path[2].childNodes[2].innerHTML = point_data;
+            }
+            calculateAverage();
+            reset();
+            index();
+            btnEdit.classList.remove("d-none");
+            btnDel.classList.remove("d-none");
+            btnAccept.classList.add("d-none");
+            btnCancel.classList.add("d-none");
+          });
+        });
+        btnDel.addEventListener("click", (e) => {
+          if (e.path.length == 11) {
+            const result = confirm(
+              `Are you sure you want to delete ${e.path[3].childNodes[1].innerText}?`
+            );
+            e.path[3].classList.add("red");
+            if (!result) e.path[3].classList.remove("red");
+            if (result) {
+              setTimeout(() => {
+                e.path[3].remove();
+                calculateAverage();
+                reset();
+                index();
+              }, 500);
+            }
+          } else if (e.path.length == 10) {
+            const result = confirm(
+              `Are you sure you want to delete ${e.path[2].childNodes[1].innerText}?`
+            );
+            e.path[2].classList.add("red");
+            if (!result) e.path[2].classList.remove("red");
+            if (result) {
+              setTimeout(() => {
+                e.path[2].remove();
+                calculateAverage();
+                reset();
+                index();
+              }, 500);
+            }
+          }
+        });
+        index();
+        calculateAverage();
+        name.value = "";
+        point.value = "";
+        name.focus();
+        reset();
+      });
+      const calculateAverage = () => {
+        let average = 0;
+        const scores = tbody.querySelectorAll("tr td:nth-child(3)");
+        for (let i = 0; i < scores.length - 1; i++) {
+          average += Number(scores[i].outerText);
+        }
+        return (putPoint.innerText = Number(
+          (average / (scores.length - 1)).toFixed(2)
+        ));
+      };
+      const index = () => {
+        var table = document.getElementsByTagName("table")[0];
+        rows = table.getElementsByTagName("tr");
+        text = "textContent" in document ? "textContent" : "innerText";
+
+        for (var i = 1, len = rows.length - 1; i < len; i++) {
+          rows[i].children[0][text] = i;
+        }
+      };
+      const reset = () => {
+        if (isNaN(putPoint.innerText)) {
+          return (putPoint.innerText = "");
+        }
+      };
+      name.addEventListener("keyup", (e) => {
+        if (e.keyCode == 13) {
+          add.click();
+        }
+      });
+      point.addEventListener("keyup", (e) => {
+        if (e.keyCode == 13) {
+          add.click();
+        }
+      });
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
